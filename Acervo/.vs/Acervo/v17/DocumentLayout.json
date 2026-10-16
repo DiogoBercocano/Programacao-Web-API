@@ -1,18 +1,14 @@
 {
   "Version": 1,
-  "WorkspaceRootPath": "C:\\Users\\dgber\\Documents\\GitHub\\programacao-Full-Stack\\BarbeariaApp\\Acervo\\",
+  "WorkspaceRootPath": "C:\\Users\\dgber\\source\\repos\\Acervo\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{6A598C39-ACCC-49BD-B044-C31A6C87AB9C}|Acervo.csproj|c:\\users\\dgber\\documents\\github\\programacao-full-stack\\barbeariaapp\\acervo\\controllers\\livroscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6A598C39-ACCC-49BD-B044-C31A6C87AB9C}|Acervo.csproj|solutionrelative:controllers\\livroscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{385DECE5-39DE-4A5A-90A5-59568BD16FE0}|Acervo.csproj|c:\\users\\dgber\\source\\repos\\acervo\\services\\livroservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{385DECE5-39DE-4A5A-90A5-59568BD16FE0}|Acervo.csproj|solutionrelative:services\\livroservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{6A598C39-ACCC-49BD-B044-C31A6C87AB9C}|Acervo.csproj|c:\\users\\dgber\\documents\\github\\programacao-full-stack\\barbeariaapp\\acervo\\models\\livro.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{6A598C39-ACCC-49BD-B044-C31A6C87AB9C}|Acervo.csproj|solutionrelative:models\\livro.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{6A598C39-ACCC-49BD-B044-C31A6C87AB9C}|Acervo.csproj|c:\\users\\dgber\\documents\\github\\programacao-full-stack\\barbeariaapp\\acervo\\acervo.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
-      "RelativeMoniker": "D:0:0:{6A598C39-ACCC-49BD-B044-C31A6C87AB9C}|Acervo.csproj|solutionrelative:acervo.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
+      "AbsoluteMoniker": "D:0:0:{385DECE5-39DE-4A5A-90A5-59568BD16FE0}|Acervo.csproj|c:\\users\\dgber\\source\\repos\\acervo\\dtos\\livro\\livroupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{385DECE5-39DE-4A5A-90A5-59568BD16FE0}|Acervo.csproj|solutionrelative:dtos\\livro\\livroupdatedto.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -22,7 +18,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 6,
           "Children": [
             {
               "$type": "Bookmark",
@@ -37,43 +33,36 @@
               "Name": "ST:1:0:{d212f56b-c48a-434c-a121-1c5d80b59b9f}"
             },
             {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "LivrosController.cs",
-              "DocumentMoniker": "C:\\Users\\dgber\\Documents\\GitHub\\programacao-Full-Stack\\BarbeariaApp\\Acervo\\Controllers\\LivrosController.cs",
-              "RelativeDocumentMoniker": "Controllers\\LivrosController.cs",
-              "ToolTip": "C:\\Users\\dgber\\Documents\\GitHub\\programacao-Full-Stack\\BarbeariaApp\\Acervo\\Controllers\\LivrosController.cs",
-              "RelativeToolTip": "Controllers\\LivrosController.cs",
-              "ViewState": "AgIAAAIAAAAAAAAAAAAcwBkAAABAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-27T23:20:18Z",
-              "EditorCaption": ""
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
             },
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Livro.cs",
-              "DocumentMoniker": "C:\\Users\\dgber\\Documents\\GitHub\\programacao-Full-Stack\\BarbeariaApp\\Acervo\\Models\\Livro.cs",
-              "RelativeDocumentMoniker": "Models\\Livro.cs",
-              "ToolTip": "C:\\Users\\dgber\\Documents\\GitHub\\programacao-Full-Stack\\BarbeariaApp\\Acervo\\Models\\Livro.cs",
-              "RelativeToolTip": "Models\\Livro.cs",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAuAAAAAAAAAA==",
+              "Title": "LivroUpdateDTO.cs",
+              "DocumentMoniker": "C:\\Users\\dgber\\source\\repos\\Acervo\\DTOS\\Livro\\LivroUpdateDTO.cs",
+              "RelativeDocumentMoniker": "DTOS\\Livro\\LivroUpdateDTO.cs",
+              "ToolTip": "C:\\Users\\dgber\\source\\repos\\Acervo\\DTOS\\Livro\\LivroUpdateDTO.cs",
+              "RelativeToolTip": "DTOS\\Livro\\LivroUpdateDTO.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAUAAAAFAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2026-08-27T23:15:07.443Z",
-              "EditorCaption": ""
+              "WhenOpened": "2026-10-09T00:47:23.641Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "Acervo",
-              "DocumentMoniker": "C:\\Users\\dgber\\Documents\\GitHub\\programacao-Full-Stack\\BarbeariaApp\\Acervo\\Acervo.csproj",
-              "RelativeDocumentMoniker": "Acervo.csproj",
-              "ToolTip": "C:\\Users\\dgber\\Documents\\GitHub\\programacao-Full-Stack\\BarbeariaApp\\Acervo\\Acervo.csproj",
-              "RelativeToolTip": "Acervo.csproj",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
-              "WhenOpened": "2026-08-27T23:14:22.414Z",
-              "EditorCaption": ""
+              "DocumentIndex": 0,
+              "Title": "LivroService.cs",
+              "DocumentMoniker": "C:\\Users\\dgber\\source\\repos\\Acervo\\Services\\LivroService.cs",
+              "RelativeDocumentMoniker": "Services\\LivroService.cs",
+              "ToolTip": "C:\\Users\\dgber\\source\\repos\\Acervo\\Services\\LivroService.cs",
+              "RelativeToolTip": "Services\\LivroService.cs",
+              "ViewState": "AgIAAOYAAAAAAAAAAAAuwPAAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-08T22:20:47.04Z"
             }
           ]
         }

@@ -1,0 +1,115 @@
+===================================================================
+TERMO DE USO DE INTELIGÊNCIA ARTIFICIAL GENERATIVA
+Projeto: HelpDeskAPI - Checkpoint 02
+===================================================================
+
+-------------------------------------------------------------------
+1. IDENTIFICAÇÃO
+-------------------------------------------------------------------
+Aluno(a): [seu nome]
+RA: [seu RA]
+Turma: [sua turma]
+Disciplina: Programação Back-End/Web API
+Trabalho: Projeto Integrador - Checkpoint 02
+
+-------------------------------------------------------------------
+2. FERRAMENTA DE IA UTILIZADA
+-------------------------------------------------------------------
+Ferramenta: Claude Code (assistente de IA generativa da Anthropic,
+modelo Claude Sonnet 5), operando como agente de linha de comando
+com acesso de leitura/escrita ao repositório do projeto.
+
+-------------------------------------------------------------------
+3. CONTEXTO DE USO
+-------------------------------------------------------------------
+O aluno solicitou que a IA lesse o enunciado do Checkpoint 02
+(arquivo Checkpoint02-WebApi.pdf) e implementasse os requisitos
+diretamente no projeto HelpDeskAPI (estrutura entregue no
+Checkpoint 01, que usava apenas dados em memória). A IA interpretou
+o enunciado, planejou a implementação e executou as alterações de
+código e testes de forma autônoma, com supervisão e validação do 
+aluno ao final.
+
+-------------------------------------------------------------------
+4. TAREFAS EXECUTADAS PELA IA
+-------------------------------------------------------------------
+
+4.1 Leitura e interpretação do enunciado
+  - Leitura do arquivo Checkpoint02-WebApi.pdf (Downloads) e
+    extração dos requisitos: banco de dados SQL Server, Entity
+    Framework Core, CRUD completo, status codes, filtros e
+    validações.
+
+4.3 Modelagem e persistência de dados
+  - Criação do arquivo Data/HelpDeskDbContext.cs (DbContext),
+    definindo DbSet<Usuario>, DbSet<Chamado>, DbSet<Interacao>.
+  - Configuração, via Fluent API (OnModelCreating), de:
+      chaves primárias;
+      chaves estrangeiras (Chamado->Solicitante, Chamado->Tecnico,
+        Interacao->Chamado, Interacao->Autor);
+      comportamento de exclusão (Restrict / Cascade);
+      tamanhos máximos de campos de texto;
+      índice único para o e-mail de Usuario;
+      dados de seed (carga inicial de exemplo, reaproveitando os
+        dados que já existiam no repositório em memória do
+        Checkpoint 01).
+  - Remoção do arquivo Data/RepositorioEmMemoria.cs, substituído
+    pela persistência real via Entity Framework Core.
+  - Adição da connection string "DefaultConnection" em
+    appsettings.json, apontando para o SQL Server LocalDB.
+  - Registro do DbContext em Program.cs
+    (builder.Services.AddDbContext<HelpDeskDbContext>).
+  - Geração da migration inicial "InitialCreate"
+    (`dotnet ef migrations add InitialCreate`) e aplicação dela ao
+    banco de dados (`dotnet ef database update`), criando
+    fisicamente o banco "HelpDeskDb" e suas tabelas no LocalDB.
+
+4.4 Validações
+  - Inclusão de Data Annotations nos Models (Usuario.cs,
+    Chamado.cs, Interacao.cs): campos obrigatórios, tamanho mínimo
+    e máximo de strings, formato de e-mail, validação de valores de
+    enum (Perfil, Prioridade, Status).
+  - Criação da pasta Dtos/ com UsuarioDtos.cs, ChamadoDtos.cs e
+    InteracaoCreateDto.cs, usados para separar os dados de entrada
+    (criação/atualização) da entidade de domínio e repetir as
+    mesmas validações nas requisições.
+  - Implementação de regras de negócio nos Controllers: e-mail de
+    usuário único; SolicitanteId e TecnicoId precisam existir;
+    TecnicoId precisa pertencer a um usuário com perfil Técnico;
+    DataFechamento de um chamado só é aceita quando o status é
+    final (Resolvido, Fechado ou Cancelado); bloqueio de exclusão
+    de usuário com chamados/interações vinculados.
+
+
+4.6 Testes e validação do funcionamento
+  - Build do projeto (`dotnet build`) para checagem de erros de
+    compilação.
+  - Execução da API localmente (`dotnet run`) contra o SQL Server
+    LocalDB real.
+  - Testes manuais via linha de comando (curl) de todos os
+    endpoints: listagens com e sem filtro, criação válida e
+    inválida, atualização existente e inexistente, exclusão
+    existente/inexistente/com vínculo impeditivo, exclusão em
+    cascata de interações ao remover um chamado, e checagem de
+    cada status code retornado.
+  - Recriação do banco de dados (`dotnet ef database drop` seguido
+    de `dotnet ef database update`) ao final dos testes, para
+    restaurar o estado original dos dados de exemplo (seed) antes
+    da entrega.
+  - Atualização do arquivo HelpDeskAPI.http com exemplos de todas
+    as requisições (GET, POST, PUT, DELETE) para os três recursos.
+
+-------------------------------------------------------------------
+5. PARTES DO TRABALHO QUE NÃO USARAM IA
+-------------------------------------------------------------------
+Criação de CRUD e endpoints, e todo o resto que não foi citado acima.
+-------------------------------------------------------------------
+6. DECLARAÇÃO
+-------------------------------------------------------------------
+Declaro que o uso de Inteligência Artificial Generativa neste
+trabalho está descrito de forma completa e verdadeira acima, tendo
+sido utilizada como ferramenta de apoio ao desenvolvimento, e que
+revisei e compreendo o código e as decisões técnicas implementadas.
+
+Assinatura: ____________________________
+Data: ___/___/______

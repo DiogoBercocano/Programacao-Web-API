@@ -1,0 +1,227 @@
+===================================================================
+PROJETO INTEGRADOR - CHECKPOINT 02
+Disciplina: Programação Back-End/Web API
+Projeto: HelpDeskAPI
+===================================================================
+
+-------------------------------------------------------------------
+1. IDENTIFICAÇÃO
+-------------------------------------------------------------------
+
+-------------------------------------------------------------------
+2. OBJETIVO DO CHECKPOINT
+-------------------------------------------------------------------
+Evoluir a API REST entregue no Checkpoint 01 (que trabalhava com
+dados em memória) adicionando persistência real em banco de dados
+relacional, relacionamentos entre entidades, operações CRUD
+completas, filtros de consulta e validações de dados.
+
+-------------------------------------------------------------------
+3. TECNOLOGIAS UTILIZADAS
+-------------------------------------------------------------------
+- .NET 8 / ASP.NET Core Web API
+- Entity Framework Core 8.0.10
+  - Microsoft.EntityFrameworkCore.SqlServer
+  - Microsoft.EntityFrameworkCore.Design
+  - Microsoft.EntityFrameworkCore.Tools
+- SQL Server LocalDB (instância MSSQLLocalDB)
+- Swashbuckle / Swagger (documentação interativa dos endpoints)
+
+-------------------------------------------------------------------
+4. MODELO DE DADOS / ENTIDADES
+-------------------------------------------------------------------
+O domínio da aplicação é um sistema de Help Desk, com 3 entidades
+principais:
+
+4.1 Usuario (Models/Usuario.cs)
+    - Id (PK, int, identity)
+    - Nome (obrigatório, 3 a 120 caracteres)
+    - Email (obrigatório, formato válido, único, até 150 caracteres)
+    - Setor (obrigatório, até 80 caracteres)
+    - Perfil (enum: Solicitante = 1, Tecnico = 2)
+    - Ativo (bool)
+
+4.2 Chamado (Models/Chamado.cs)
+    - Id (PK, int, identity)
+    - Titulo (obrigatório, 5 a 150 caracteres)
+    - Descricao (obrigatório, 10 a 2000 caracteres)
+    - Categoria (obrigatório, até 60 caracteres)
+    - Prioridade (enum: Baixa, Media, Alta, Critica)
+    - Status (enum: Aberto, EmAtendimento, Resolvido, Fechado,
+      Cancelado)
+    - DataAbertura / DataFechamento (datetime)
+    - SolicitanteId (FK obrigatória -> Usuario)
+    - TecnicoId (FK opcional -> Usuario)
+
+4.3 Interacao (Models/Interacao.cs)
+    - Id (PK, int, identity)
+    - Mensagem (obrigatório, 3 a 1000 caracteres)
+    - DataRegistro (datetime)
+    - Interna (bool - indica se é uma nota interna da equipe técnica)
+    - ChamadoId (FK obrigatória -> Chamado)
+    - AutorId (FK obrigatória -> Usuario)
+
+-------------------------------------------------------------------
+5. RELACIONAMENTOS
+-------------------------------------------------------------------
+- Usuario (1) ---- (N) Chamado, como Solicitante
+  (um usuário pode abrir vários chamados)
+- Usuario (1) ---- (N) Chamado, como Tecnico (opcional)
+  (um técnico pode atender vários chamados; chamado pode não ter
+  técnico atribuído ainda)
+- Chamado (1) ---- (N) Interacao
+  (um chamado possui várias interações/mensagens de acompanhamento)
+- Usuario (1) ---- (N) Interacao, como Autor
+  (um usuário pode registrar várias interações)
+
+Regras de exclusão (DeleteBehavior) configuradas em
+Data/HelpDeskDbContext.cs:
+- Chamado -> Solicitante / Tecnico: Restrict (não permite apagar um
+  usuário referenciado por chamados, evita exclusão em cascata
+  indevida de histórico)
+- Interacao -> Chamado: Cascade (ao excluir um chamado, suas
+  interações são excluídas automaticamente)
+- Interacao -> Autor: Restrict
+
+-------------------------------------------------------------------
+6. ENTITY FRAMEWORK CORE
+-------------------------------------------------------------------
+- DbContext: Data/HelpDeskDbContext.cs, com DbSet<Usuario>,
+  DbSet<Chamado>, DbSet<Interacao>.
+- Configuração de conexão: appsettings.json, chave
+  "ConnectionStrings:DefaultConnection", apontando para o SQL
+  Server LocalDB:
+  Server=(localdb)\MSSQLLocalDB;Database=HelpDeskDb;
+  Trusted_Connection=True;MultipleActiveResultSets=true;
+  TrustServerCertificate=True
+- Registro do DbContext: Program.cs, via
+  builder.Services.AddDbContext<HelpDeskDbContext>(...).
+- Mapeamentos de entidades e relacionamentos: método
+  OnModelCreating em HelpDeskDbContext.cs (chaves primárias, chaves
+  estrangeiras, tamanhos de campo, índice único de e-mail, dados de
+  seed/exemplo).
+- Migrations: pasta Migrations/, migration inicial
+  "InitialCreate", gerada com `dotnet ef migrations add
+  InitialCreate` e aplicada ao banco com `dotnet ef database
+  update`.
+
+-------------------------------------------------------------------
+7. ENDPOINTS E OPERAÇÕES CRUD
+-------------------------------------------------------------------
+7.1 UsuariosController (Controllers/UsuariosController.cs)
+  GET    /api/usuarios                -> lista usuários (200)
+  GET    /api/usuarios?perfil=&ativo= -> lista com filtros (200)
+  GET    /api/usuarios/{id}           -> busca por id (200 / 404)
+  POST   /api/usuarios                -> cria usuário (201 / 400)
+  PUT    /api/usuarios/{id}           -> atualiza (204 / 400 / 404)
+  DELETE /api/usuarios/{id}           -> remove (204 / 400 / 404)
+
+7.2 ChamadosController (Controllers/ChamadosController.cs)
+  GET    /api/chamados                -> lista chamados (200)
+  GET    /api/chamados?status=&prioridade=&categoria=
+         &solicitanteId=&tecnicoId=   -> lista com filtros (200)
+  GET    /api/chamados/{id}           -> busca por id (200 / 404)
+  POST   /api/chamados                -> cria chamado (201 / 400)
+  PUT    /api/chamados/{id}           -> atualiza (204 / 400 / 404)
+  DELETE /api/chamados/{id}           -> remove (204 / 404)
+  GET    /api/chamados/{id}/interacoes            -> lista
+         interações do chamado (200 / 404)
+  POST   /api/chamados/{id}/interacoes            -> registra
+         interação (201 / 400 / 404)
+  DELETE /api/chamados/{id}/interacoes/{interacaoId} -> remove
+         interação (204 / 404)
+
+Exemplos de requisições prontas em HelpDeskAPI.http.
+
+-------------------------------------------------------------------
+8. STATUS CODES UTILIZADOS
+-------------------------------------------------------------------
+200 OK            - consultas (GET) bem-sucedidas
+201 Created        - criação de Usuario, Chamado e Interacao,
+                      retornando o recurso criado e o header
+                      Location (via CreatedAtAction)
+204 No Content      - atualizações (PUT) e remoções (DELETE)
+                      bem-sucedidas
+400 Bad Request     - dados inválidos (campos obrigatórios, formato,
+                      tamanho, valores de enum, regras de negócio)
+404 Not Found       - recurso não encontrado (usuário, chamado ou
+                      interação inexistente)
+
+-------------------------------------------------------------------
+9. FILTROS IMPLEMENTADOS
+-------------------------------------------------------------------
+Usuarios:
+  - perfil  (GET /api/usuarios?perfil=Tecnico)
+  - ativo   (GET /api/usuarios?ativo=true)
+
+Chamados:
+  - status        (GET /api/chamados?status=Aberto)
+  - prioridade    (GET /api/chamados?prioridade=Critica)
+  - categoria     (GET /api/chamados?categoria=Hardware)
+  - solicitanteId (GET /api/chamados?solicitanteId=1)
+  - tecnicoId     (GET /api/chamados?tecnicoId=3)
+
+Os filtros podem ser combinados entre si na mesma requisição.
+
+-------------------------------------------------------------------
+10. VALIDAÇÕES IMPLEMENTADAS
+-------------------------------------------------------------------
+10.1 Validações de campo (Data Annotations nos Models e DTOs):
+  - Campos obrigatórios: Nome, Email, Setor, Perfil (Usuario);
+    Titulo, Descricao, Categoria, Prioridade, SolicitanteId
+    (Chamado); Mensagem, AutorId (Interacao).
+  - Tamanho mínimo/máximo de strings (ex.: Nome entre 3 e 120,
+    Titulo entre 5 e 150, Descricao entre 10 e 2000).
+  - Formato de e-mail válido (EmailAddress).
+  - Valores permitidos (enum válido) para Perfil, Prioridade e
+    Status.
+  - Quando a validação falha, a API retorna 400 Bad Request com o
+    detalhamento de cada campo inválido (ValidationProblemDetails,
+    gerado automaticamente pelo [ApiController]).
+
+10.2 Regras de negócio (validadas nos Controllers):
+  - E-mail de usuário deve ser único no sistema (checado na criação
+    e na atualização).
+  - O SolicitanteId informado em um chamado precisa existir.
+  - O TecnicoId, quando informado, precisa existir e precisa ter o
+    Perfil = Tecnico.
+  - A DataFechamento de um chamado só pode ser informada quando o
+    Status for Resolvido, Fechado ou Cancelado.
+  - Não é possível excluir um usuário que já possui chamados
+    (como solicitante ou técnico) ou interações vinculadas a ele.
+
+-------------------------------------------------------------------
+11. COMO EXECUTAR O PROJETO
+-------------------------------------------------------------------
+Pré-requisitos: .NET 8 SDK, SQL Server LocalDB (ou outra instância
+SQL Server, ajustando a connection string).
+
+1. Restaurar e aplicar a migration (cria o banco e as tabelas):
+   dotnet ef database update
+
+2. Rodar a aplicação:
+   dotnet run
+
+3. Acessar a documentação interativa (Swagger):
+   http://localhost:5087/swagger
+
+-------------------------------------------------------------------
+12. TESTES REALIZADOS
+-------------------------------------------------------------------
+Os endpoints foram testados manualmente via requisições HTTP
+(curl / arquivo HelpDeskAPI.http), cobrindo:
+  - Listagem com e sem filtros.
+  - Criação com dados válidos (201) e inválidos (400), incluindo
+    violação de regra de negócio (e-mail duplicado, solicitante
+    inexistente, técnico com perfil incorreto).
+  - Atualização de recurso existente (204) e inexistente (404).
+  - Exclusão de recurso existente (204), inexistente (404) e com
+    vínculo impeditivo (400).
+  - Exclusão em cascata das interações ao remover um chamado.
+Após os testes, o banco foi recriado do zero (drop + update) para
+manter os dados de exemplo originais (seed) intactos para a
+entrega.
+
+-------------------------------------------------------------------
+13. CONSIDERAÇÕES FINAIS / MELHORIAS FUTURAS
+-------------------------------------------------------------------

@@ -1,0 +1,113 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\Lenon\\Downloads\\Acervo-main-pen-drive\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{385DECE5-39DE-4A5A-90A5-59568BD16FE0}|Acervo.csproj|c:\\users\\lenon\\downloads\\acervo-main-pen-drive\\appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}",
+      "RelativeMoniker": "D:0:0:{385DECE5-39DE-4A5A-90A5-59568BD16FE0}|Acervo.csproj|solutionrelative:appsettings.json||{90A6B3A7-C1A3-4009-A288-E2FF89E96FA0}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{385DECE5-39DE-4A5A-90A5-59568BD16FE0}|Acervo.csproj|c:\\users\\lenon\\downloads\\acervo-main-pen-drive\\services\\livroservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{385DECE5-39DE-4A5A-90A5-59568BD16FE0}|Acervo.csproj|solutionrelative:services\\livroservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{385DECE5-39DE-4A5A-90A5-59568BD16FE0}|Acervo.csproj|c:\\users\\lenon\\downloads\\acervo-main-pen-drive\\controllers\\livroscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{385DECE5-39DE-4A5A-90A5-59568BD16FE0}|Acervo.csproj|solutionrelative:controllers\\livroscontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{385DECE5-39DE-4A5A-90A5-59568BD16FE0}|Acervo.csproj|c:\\users\\lenon\\downloads\\acervo-main-pen-drive\\models\\autor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{385DECE5-39DE-4A5A-90A5-59568BD16FE0}|Acervo.csproj|solutionrelative:models\\autor.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{385DECE5-39DE-4A5A-90A5-59568BD16FE0}|Acervo.csproj|c:\\users\\lenon\\downloads\\acervo-main-pen-drive\\models\\livro.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{385DECE5-39DE-4A5A-90A5-59568BD16FE0}|Acervo.csproj|solutionrelative:models\\livro.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{3ae79031-e1bc-11d0-8f78-00a0c9110057}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{40ea2e6b-2121-4bb8-a43e-c83c04b51041}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "appsettings.json",
+              "DocumentMoniker": "C:\\Users\\Lenon\\Downloads\\Acervo-main-pen-drive\\appsettings.json",
+              "RelativeDocumentMoniker": "appsettings.json",
+              "ToolTip": "C:\\Users\\Lenon\\Downloads\\Acervo-main-pen-drive\\appsettings.json",
+              "RelativeToolTip": "appsettings.json",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAkAAAAiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001642|",
+              "WhenOpened": "2026-10-03T02:15:36.937Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "Livro.cs",
+              "DocumentMoniker": "C:\\Users\\Lenon\\Downloads\\Acervo-main-pen-drive\\Models\\Livro.cs",
+              "RelativeDocumentMoniker": "Models\\Livro.cs",
+              "ToolTip": "C:\\Users\\Lenon\\Downloads\\Acervo-main-pen-drive\\Models\\Livro.cs",
+              "RelativeToolTip": "Models\\Livro.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAgAAAAxAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-03T01:49:31.875Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "Autor.cs",
+              "DocumentMoniker": "C:\\Users\\Lenon\\Downloads\\Acervo-main-pen-drive\\Models\\Autor.cs",
+              "RelativeDocumentMoniker": "Models\\Autor.cs",
+              "ToolTip": "C:\\Users\\Lenon\\Downloads\\Acervo-main-pen-drive\\Models\\Autor.cs",
+              "RelativeToolTip": "Models\\Autor.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-10-03T02:06:55.032Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "LivrosController.cs",
+              "DocumentMoniker": "C:\\Users\\Lenon\\Downloads\\Acervo-main-pen-drive\\Controllers\\LivrosController.cs",
+              "RelativeDocumentMoniker": "Controllers\\LivrosController.cs",
+              "ToolTip": "C:\\Users\\Lenon\\Downloads\\Acervo-main-pen-drive\\Controllers\\LivrosController.cs",
+              "RelativeToolTip": "Controllers\\LivrosController.cs",
+              "ViewState": "AgIAAFsAAAAAAAAAAAAAAEEAAAANAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-27T10:31:39.848Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "LivroService.cs",
+              "DocumentMoniker": "C:\\Users\\Lenon\\Downloads\\Acervo-main-pen-drive\\Services\\LivroService.cs",
+              "RelativeDocumentMoniker": "Services\\LivroService.cs",
+              "ToolTip": "C:\\Users\\Lenon\\Downloads\\Acervo-main-pen-drive\\Services\\LivroService.cs",
+              "RelativeToolTip": "Services\\LivroService.cs",
+              "ViewState": "AgIAAKEAAAAAAAAAAAAAAKQAAACAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-09-20T12:00:09.349Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

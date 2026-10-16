@@ -1,6 +1,106 @@
 @HelpDeskAPI_HostAddress = http://localhost:5087
 
-GET {{HelpDeskAPI_HostAddress}}/weatherforecast/
+### Usuarios - listar todos
+GET {{HelpDeskAPI_HostAddress}}/api/usuarios
 Accept: application/json
 
-###
+### Usuarios - filtro por perfil
+GET {{HelpDeskAPI_HostAddress}}/api/usuarios?perfil=Tecnico
+Accept: application/json
+
+### Usuarios - filtro por ativo
+GET {{HelpDeskAPI_HostAddress}}/api/usuarios?ativo=true
+Accept: application/json
+
+### Usuarios - buscar por id
+GET {{HelpDeskAPI_HostAddress}}/api/usuarios/1
+Accept: application/json
+
+### Usuarios - criar
+POST {{HelpDeskAPI_HostAddress}}/api/usuarios
+Content-Type: application/json
+
+{
+  "nome": "Fernanda Alves",
+  "email": "fernanda.alves@empresa.com",
+  "setor": "RH",
+  "perfil": "Solicitante",
+  "ativo": true
+}
+
+### Usuarios - atualizar
+PUT {{HelpDeskAPI_HostAddress}}/api/usuarios/1
+Content-Type: application/json
+
+{
+  "nome": "Ana Souza",
+  "email": "ana.souza@empresa.com",
+  "setor": "Financeiro",
+  "perfil": "Solicitante",
+  "ativo": true
+}
+
+### Usuarios - excluir
+DELETE {{HelpDeskAPI_HostAddress}}/api/usuarios/5
+
+### Chamados - listar todos
+GET {{HelpDeskAPI_HostAddress}}/api/chamados
+Accept: application/json
+
+### Chamados - filtro por status
+GET {{HelpDeskAPI_HostAddress}}/api/chamados?status=Aberto
+Accept: application/json
+
+### Chamados - filtro por prioridade
+GET {{HelpDeskAPI_HostAddress}}/api/chamados?prioridade=Critica
+Accept: application/json
+
+### Chamados - buscar por id
+GET {{HelpDeskAPI_HostAddress}}/api/chamados/1
+Accept: application/json
+
+### Chamados - criar
+POST {{HelpDeskAPI_HostAddress}}/api/chamados
+Content-Type: application/json
+
+{
+  "titulo": "Impressora sem toner",
+  "descricao": "A impressora do setor financeiro esta sem toner ha dois dias.",
+  "categoria": "Hardware",
+  "prioridade": "Media",
+  "solicitanteId": 1
+}
+
+### Chamados - atualizar
+PUT {{HelpDeskAPI_HostAddress}}/api/chamados/1
+Content-Type: application/json
+
+{
+  "titulo": "Computador não liga",
+  "descricao": "Ao pressionar o botao de energia, o computador nao apresenta nenhuma resposta.",
+  "categoria": "Hardware",
+  "prioridade": "Alta",
+  "status": "EmAtendimento",
+  "solicitanteId": 1,
+  "tecnicoId": 3
+}
+
+### Chamados - excluir
+DELETE {{HelpDeskAPI_HostAddress}}/api/chamados/1
+
+### Chamados - listar interacoes
+GET {{HelpDeskAPI_HostAddress}}/api/chamados/2/interacoes
+Accept: application/json
+
+### Chamados - criar interacao
+POST {{HelpDeskAPI_HostAddress}}/api/chamados/2/interacoes
+Content-Type: application/json
+
+{
+  "mensagem": "Técnico iniciou o atendimento.",
+  "interna": false,
+  "autorId": 3
+}
+
+### Chamados - excluir interacao
+DELETE {{HelpDeskAPI_HostAddress}}/api/chamados/2/interacoes/2
