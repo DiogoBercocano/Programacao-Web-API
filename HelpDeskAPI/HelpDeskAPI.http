@@ -1,36 +1,81 @@
-@HelpDeskAPI_HostAddress = http://localhost:5087
+@host = https://localhost:7257
+
+### ===================== AUTH =====================
+
+### Login - administrador
+# @name loginAdmin
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@empresa.com",
+  "senha": "Admin@123"
+}
+
+### Login - técnico
+# @name loginTecnico
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "carla.mendes@empresa.com",
+  "senha": "Senha@123"
+}
+
+### Login - solicitante
+# @name loginSolicitante
+POST {{host}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "ana.souza@empresa.com",
+  "senha": "Senha@123"
+}
+
+### Auth - usuário logado
+GET {{host}}/api/auth/me
+Authorization: Bearer {{loginAdmin.response.body.token}}
+
+### ===================== USUARIOS =====================
 
 ### Usuarios - listar todos
-GET {{HelpDeskAPI_HostAddress}}/api/usuarios
+GET {{host}}/api/usuarios
 Accept: application/json
+Authorization: Bearer {{loginAdmin.response.body.token}}
 
 ### Usuarios - filtro por perfil
-GET {{HelpDeskAPI_HostAddress}}/api/usuarios?perfil=Tecnico
+GET {{host}}/api/usuarios?perfil=Tecnico
 Accept: application/json
+Authorization: Bearer {{loginAdmin.response.body.token}}
 
 ### Usuarios - filtro por ativo
-GET {{HelpDeskAPI_HostAddress}}/api/usuarios?ativo=true
+GET {{host}}/api/usuarios?ativo=true
 Accept: application/json
+Authorization: Bearer {{loginAdmin.response.body.token}}
 
 ### Usuarios - buscar por id
-GET {{HelpDeskAPI_HostAddress}}/api/usuarios/1
+GET {{host}}/api/usuarios/1
 Accept: application/json
+Authorization: Bearer {{loginAdmin.response.body.token}}
 
 ### Usuarios - criar
-POST {{HelpDeskAPI_HostAddress}}/api/usuarios
+POST {{host}}/api/usuarios
 Content-Type: application/json
+Authorization: Bearer {{loginAdmin.response.body.token}}
 
 {
   "nome": "Fernanda Alves",
   "email": "fernanda.alves@empresa.com",
+  "senha": "Senha@123",
   "setor": "RH",
   "perfil": "Solicitante",
   "ativo": true
 }
 
 ### Usuarios - atualizar
-PUT {{HelpDeskAPI_HostAddress}}/api/usuarios/1
+PUT {{host}}/api/usuarios/1
 Content-Type: application/json
+Authorization: Bearer {{loginAdmin.response.body.token}}
 
 {
   "nome": "Ana Souza",
@@ -41,27 +86,35 @@ Content-Type: application/json
 }
 
 ### Usuarios - excluir
-DELETE {{HelpDeskAPI_HostAddress}}/api/usuarios/5
+DELETE {{host}}/api/usuarios/5
+Authorization: Bearer {{loginAdmin.response.body.token}}
+
+### ===================== CHAMADOS =====================
 
 ### Chamados - listar todos
-GET {{HelpDeskAPI_HostAddress}}/api/chamados
+GET {{host}}/api/chamados
 Accept: application/json
+Authorization: Bearer {{loginAdmin.response.body.token}}
 
 ### Chamados - filtro por status
-GET {{HelpDeskAPI_HostAddress}}/api/chamados?status=Aberto
+GET {{host}}/api/chamados?status=Aberto
 Accept: application/json
+Authorization: Bearer {{loginAdmin.response.body.token}}
 
 ### Chamados - filtro por prioridade
-GET {{HelpDeskAPI_HostAddress}}/api/chamados?prioridade=Critica
+GET {{host}}/api/chamados?prioridade=Critica
 Accept: application/json
+Authorization: Bearer {{loginAdmin.response.body.token}}
 
 ### Chamados - buscar por id
-GET {{HelpDeskAPI_HostAddress}}/api/chamados/1
+GET {{host}}/api/chamados/1
 Accept: application/json
+Authorization: Bearer {{loginAdmin.response.body.token}}
 
-### Chamados - criar
-POST {{HelpDeskAPI_HostAddress}}/api/chamados
+### Chamados - criar (solicitante)
+POST {{host}}/api/chamados
 Content-Type: application/json
+Authorization: Bearer {{loginSolicitante.response.body.token}}
 
 {
   "titulo": "Impressora sem toner",
@@ -71,9 +124,10 @@ Content-Type: application/json
   "solicitanteId": 1
 }
 
-### Chamados - atualizar
-PUT {{HelpDeskAPI_HostAddress}}/api/chamados/1
+### Chamados - atualizar (técnico)
+PUT {{host}}/api/chamados/1
 Content-Type: application/json
+Authorization: Bearer {{loginTecnico.response.body.token}}
 
 {
   "titulo": "Computador não liga",
@@ -86,39 +140,26 @@ Content-Type: application/json
 }
 
 ### Chamados - excluir
-DELETE {{HelpDeskAPI_HostAddress}}/api/chamados/1
+DELETE {{host}}/api/chamados/1
+Authorization: Bearer {{loginAdmin.response.body.token}}
 
-### Chamados - listar interacoes
-GET {{HelpDeskAPI_HostAddress}}/api/chamados/2/interacoes
+### ===================== INTERACOES =====================
+
+### Interacoes - listar
+GET {{host}}/api/chamados/2/interacoes
 Accept: application/json
+Authorization: Bearer {{loginAdmin.response.body.token}}
 
-### Chamados - criar interacao
-POST {{HelpDeskAPI_HostAddress}}/api/chamados/2/interacoes
+### Interacoes - criar (técnico; o autor vem do token)
+POST {{host}}/api/chamados/2/interacoes
 Content-Type: application/json
+Authorization: Bearer {{loginTecnico.response.body.token}}
 
 {
   "mensagem": "Técnico iniciou o atendimento.",
-  "interna": false,
-  "autorId": 3
+  "interna": false
 }
 
-### Chamados - excluir interacao
-DELETE {{HelpDeskAPI_HostAddress}}/api/chamados/2/interacoes/2
-
-### Auth - login (administrador)
-# @name login
-POST {{HelpDeskAPI_HostAddress}}/api/auth/login
-Content-Type: application/json
-
-{
-  "email": "admin@empresa.com",
-  "senha": "Admin@123"
-}
-
-### Auth - usuário logado (usa o token do login acima)
-GET {{HelpDeskAPI_HostAddress}}/api/auth/me
-Authorization: Bearer {{login.response.body.token}}
-
-### Chamados - listar com token
-GET {{HelpDeskAPI_HostAddress}}/api/chamados
-Authorization: Bearer {{login.response.body.token}}
+### Interacoes - excluir
+DELETE {{host}}/api/chamados/2/interacoes/2
+Authorization: Bearer {{loginAdmin.response.body.token}}

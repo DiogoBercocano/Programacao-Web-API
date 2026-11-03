@@ -89,7 +89,7 @@ public class ChamadosController : ControllerBase
 
         if (chamado is null)
         {
-            return NotFound(new { mensagem = $"Chamado com Id {id} nao foi encontrado." });
+            return NotFound(new { mensagem = $"Chamado com Id {id} não foi encontrado." });
         }
 
         if (EhSolicitante && chamado.SolicitanteId != UsuarioLogadoId)
@@ -107,7 +107,7 @@ public class ChamadosController : ControllerBase
 
         if (chamado is null)
         {
-            return NotFound(new { mensagem = $"Chamado com Id {id} nao foi encontrado." });
+            return NotFound(new { mensagem = $"Chamado com Id {id} não foi encontrado." });
         }
 
         if (EhSolicitante && chamado.SolicitanteId != UsuarioLogadoId)
@@ -138,7 +138,7 @@ public class ChamadosController : ControllerBase
         var solicitante = await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == dto.SolicitanteId);
         if (solicitante is null)
         {
-            return BadRequest(new { mensagem = $"Solicitante com Id {dto.SolicitanteId} nao foi encontrado." });
+            return BadRequest(new { mensagem = $"Solicitante com Id {dto.SolicitanteId} não foi encontrado." });
         }
 
         if (dto.TecnicoId.HasValue)
@@ -146,12 +146,17 @@ public class ChamadosController : ControllerBase
             var tecnico = await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == dto.TecnicoId.Value);
             if (tecnico is null)
             {
-                return BadRequest(new { mensagem = $"Técnico com Id {dto.TecnicoId.Value} nao foi encontrado." });
+                return BadRequest(new { mensagem = $"Técnico com Id {dto.TecnicoId.Value} não foi encontrado." });
             }
 
             if (tecnico.Perfil != PerfilUsuario.Tecnico)
             {
                 return BadRequest(new { mensagem = "O usuário informado como técnico não possui perfil Técnico." });
+            }
+
+            if (!tecnico.Ativo)
+            {
+                return BadRequest(new { mensagem = "O técnico informado está inativo." });
             }
         }
 
@@ -162,7 +167,7 @@ public class ChamadosController : ControllerBase
             Categoria = dto.Categoria,
             Prioridade = dto.Prioridade,
             Status = StatusChamado.Aberto,
-            DataAbertura = DateTime.Now,
+            DataAbertura = DateTime.UtcNow,
             DataFechamento = null,
             SolicitanteId = dto.SolicitanteId,
             TecnicoId = dto.TecnicoId
@@ -182,13 +187,13 @@ public class ChamadosController : ControllerBase
 
         if (chamado is null)
         {
-            return NotFound(new { mensagem = $"Chamado com Id {id} nao foi encontrado." });
+            return NotFound(new { mensagem = $"Chamado com Id {id} não foi encontrado." });
         }
 
         var solicitante = await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == dto.SolicitanteId);
         if (solicitante is null)
         {
-            return BadRequest(new { mensagem = $"Solicitante com Id {dto.SolicitanteId} nao foi encontrado." });
+            return BadRequest(new { mensagem = $"Solicitante com Id {dto.SolicitanteId} não foi encontrado." });
         }
 
         if (dto.TecnicoId.HasValue)
@@ -196,12 +201,17 @@ public class ChamadosController : ControllerBase
             var tecnico = await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == dto.TecnicoId.Value);
             if (tecnico is null)
             {
-                return BadRequest(new { mensagem = $"Técnico com Id {dto.TecnicoId.Value} nao foi encontrado." });
+                return BadRequest(new { mensagem = $"Técnico com Id {dto.TecnicoId.Value} não foi encontrado." });
             }
 
             if (tecnico.Perfil != PerfilUsuario.Tecnico)
             {
                 return BadRequest(new { mensagem = "O usuário informado como técnico não possui perfil Técnico." });
+            }
+
+            if (!tecnico.Ativo)
+            {
+                return BadRequest(new { mensagem = "O técnico informado está inativo." });
             }
         }
 
@@ -218,7 +228,7 @@ public class ChamadosController : ControllerBase
         chamado.Status = dto.Status;
         chamado.SolicitanteId = dto.SolicitanteId;
         chamado.TecnicoId = dto.TecnicoId;
-        chamado.DataFechamento = statusDeFechamento ? dto.DataFechamento ?? chamado.DataFechamento ?? DateTime.Now : null;
+        chamado.DataFechamento = statusDeFechamento ? dto.DataFechamento ?? chamado.DataFechamento ?? DateTime.UtcNow : null;
 
         await _context.SaveChangesAsync();
 
@@ -233,7 +243,7 @@ public class ChamadosController : ControllerBase
 
         if (chamado is null)
         {
-            return NotFound(new { mensagem = $"Chamado com Id {id} nao foi encontrado." });
+            return NotFound(new { mensagem = $"Chamado com Id {id} não foi encontrado." });
         }
 
         _context.Chamados.Remove(chamado);
@@ -248,7 +258,12 @@ public class ChamadosController : ControllerBase
         var chamado = await _context.Chamados.FirstOrDefaultAsync(c => c.Id == id);
         if (chamado is null)
         {
-            return NotFound(new { mensagem = $"Chamado com Id {id} nao foi encontrado." });
+            return NotFound(new { mensagem = $"Chamado com Id {id} não foi encontrado." });
+        }
+
+        if (chamado.Status is StatusChamado.Fechado or StatusChamado.Cancelado)
+        {
+            return BadRequest(new { mensagem = "Não é possível registrar interações em chamados fechados ou cancelados." });
         }
 
         if (EhSolicitante)
@@ -268,7 +283,7 @@ public class ChamadosController : ControllerBase
         {
             Mensagem = dto.Mensagem,
             Interna = dto.Interna,
-            DataRegistro = DateTime.Now,
+            DataRegistro = DateTime.UtcNow,
             ChamadoId = id,
             AutorId = UsuarioLogadoId
         };
@@ -287,7 +302,7 @@ public class ChamadosController : ControllerBase
 
         if (interacao is null)
         {
-            return NotFound(new { mensagem = $"Interação com Id {interacaoId} nao foi encontrada para o chamado {id}." });
+            return NotFound(new { mensagem = $"Interação com Id {interacaoId} não foi encontrada para o chamado {id}." });
         }
 
         _context.Interacoes.Remove(interacao);

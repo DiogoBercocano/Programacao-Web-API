@@ -54,7 +54,7 @@ public class UsuariosController : ControllerBase
 
         if (usuario is null)
         {
-            return NotFound(new { mensagem = $"Usuario com Id {id} nao foi encontrado." });
+            return NotFound(new { mensagem = $"Usuário com Id {id} não foi encontrado." });
         }
 
         return Ok(usuario);
@@ -95,7 +95,7 @@ public class UsuariosController : ControllerBase
 
         if (usuario is null)
         {
-            return NotFound(new { mensagem = $"Usuario com Id {id} nao foi encontrado." });
+            return NotFound(new { mensagem = $"Usuário com Id {id} não foi encontrado." });
         }
 
         var emailEmUso = await _context.Usuarios.AnyAsync(u => u.Email == dto.Email && u.Id != id);
@@ -123,7 +123,7 @@ public class UsuariosController : ControllerBase
 
         if (usuario is null)
         {
-            return NotFound(new { mensagem = $"Usuario com Id {id} nao foi encontrado." });
+            return NotFound(new { mensagem = $"Usuário com Id {id} não foi encontrado." });
         }
 
         var possuiVinculos = await _context.Chamados.AnyAsync(c => c.SolicitanteId == id || c.TecnicoId == id)

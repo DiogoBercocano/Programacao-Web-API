@@ -74,6 +74,32 @@ builder.Services
             RoleClaimType = ClaimTypes.Role,
             ClockSkew = TimeSpan.Zero
         };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = async ctx =>
+            {
+                var db = ctx.HttpContext.RequestServices.GetRequiredService<HelpDeskDbContext>();
+                var idClaim = ctx.Principal?.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (!int.TryParse(idClaim, out var usuarioId))
+                {
+                    ctx.Fail("Usuário inativo ou removido.");
+                    return;
+                }
+
+                var ativo = await db.Usuarios
+                    .AsNoTracking()
+                    .Where(u => u.Id == usuarioId)
+                    .Select(u => (bool?)u.Ativo)
+                    .FirstOrDefaultAsync();
+
+                if (ativo != true)
+                {
+                    ctx.Fail("Usuário inativo ou removido.");
+                }
+            }
+        };
     });
 
 builder.Services.AddAuthorization();
