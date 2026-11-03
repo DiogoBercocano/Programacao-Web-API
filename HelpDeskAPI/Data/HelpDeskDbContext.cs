@@ -23,6 +23,7 @@ public class HelpDeskDbContext : DbContext
             entity.Property(u => u.Nome).IsRequired().HasMaxLength(120);
             entity.Property(u => u.Email).IsRequired().HasMaxLength(150);
             entity.Property(u => u.Setor).IsRequired().HasMaxLength(80);
+            entity.Property(u => u.SenhaHash).IsRequired().HasMaxLength(200);
         });
 
         modelBuilder.Entity<Chamado>(entity =>

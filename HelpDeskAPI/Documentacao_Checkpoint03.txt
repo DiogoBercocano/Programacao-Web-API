@@ -1,0 +1,111 @@
+===================================================================
+PROJETO INTEGRADOR - CHECKPOINT 03
+Disciplina: Programação Back-End/Web API
+Projeto: HelpDeskAPI
+===================================================================
+
+-------------------------------------------------------------------
+1. OBJETIVO DO CHECKPOINT
+-------------------------------------------------------------------
+Concluir o sistema implementando autenticação com JWT e autorização
+por perfil, protegendo os endpoints da API.
+
+-------------------------------------------------------------------
+2. O QUE FOI ADICIONADO
+-------------------------------------------------------------------
+- Pacote Microsoft.AspNetCore.Authentication.JwtBearer 8.0.10.
+- Usuario.SenhaHash: senha armazenada apenas como hash
+  (PasswordHasher do ASP.NET Core Identity), nunca em texto puro.
+  A propriedade tem [JsonIgnore] e não aparece nas respostas.
+- Perfil Administrador (PerfilUsuario = 3), além de Solicitante (1)
+  e Tecnico (2).
+- Security/Perfis.cs: constantes de perfil usadas em [Authorize].
+- Services/TokenService.cs: gera o JWT (HS256) com os claims
+  NameIdentifier, Name, Email, Role e Jti.
+- Controllers/AuthController.cs: POST /api/auth/login e
+  GET /api/auth/me.
+- Data/DbSeeder.cs: na inicialização aplica as migrations, cria o
+  administrador e define a senha padrão dos usuários de exemplo.
+- Migration "Autenticacao": adiciona a coluna SenhaHash.
+- Swagger com botão "Authorize" para informar o token Bearer.
+
+-------------------------------------------------------------------
+3. AUTENTICAÇÃO
+-------------------------------------------------------------------
+Fluxo:
+ 1. POST /api/auth/login com { "email", "senha" }.
+ 2. A API busca o usuário pelo e-mail, recusa usuários inativos e
+    verifica o hash da senha.
+ 3. Credenciais válidas: retorna 200 com token, expiração, id,
+    nome e perfil. Inválidas: 401 com a mesma mensagem para e-mail
+    inexistente, senha errada ou usuário inativo.
+ 4. O cliente envia o token em "Authorization: Bearer <token>".
+ 5. O middleware valida assinatura, issuer, audience e expiração
+    (ClockSkew zero). Token ausente ou inválido gera 401.
+
+Configuração (appsettings.json, seção "Jwt"): Key, Issuer,
+Audience e ExpirationMinutes (60). A chave do appsettings é de
+desenvolvimento e deve ser trocada (user-secrets ou variável de
+ambiente Jwt__Key) fora deste ambiente acadêmico.
+
+Usuários de teste:
+  admin@empresa.com           Administrador  Admin@123
+  carla.mendes@empresa.com    Tecnico        Senha@123
+  diego.ferreira@empresa.com  Tecnico        Senha@123
+  ana.souza@empresa.com       Solicitante    Senha@123
+  bruno.lima@empresa.com      Solicitante    Senha@123
+
+-------------------------------------------------------------------
+4. AUTORIZAÇÃO (PERFIS)
+-------------------------------------------------------------------
+Todos os endpoints exigem token, exceto POST /api/auth/login.
+Sem token: 401. Perfil sem permissão: 403.
+
+Endpoint                              Solic.  Técnico  Admin
+POST   /api/auth/login                público (todos)
+GET    /api/auth/me                   sim     sim      sim
+GET    /api/usuarios, /{id}           não     sim      sim
+POST   /api/usuarios                  não      não      sim
+PUT    /api/usuarios/{id}             não      não      sim
+DELETE /api/usuarios/{id}             não      não      sim
+GET    /api/chamados, /{id}           próprios sim      sim
+GET    /api/chamados/{id}/interacoes  próprios* sim      sim
+POST   /api/chamados                  sim**    sim      sim
+PUT    /api/chamados/{id}             não      sim      sim
+DELETE /api/chamados/{id}             não      não      sim
+POST   /api/chamados/{id}/interacoes  próprios*** sim    sim
+DELETE /api/chamados/{id}/interacoes/{iid}  não não     sim
+
+ * O solicitante não vê interações internas.
+ ** O solicitante só abre chamados em seu próprio nome; o
+    SolicitanteId enviado é ignorado e o TecnicoId é descartado.
+ *** O solicitante só interage em chamados próprios e não pode
+    registrar interações internas (400).
+
+Regras adicionais:
+ - O autor de uma interação é sempre o usuário do token; o campo
+   AutorId foi removido de InteracaoCreateDto.
+ - Solicitante que consulta chamado de outro: 403.
+ - A listagem de chamados de um solicitante é sempre filtrada
+   pelo seu Id, ignorando o parâmetro solicitanteId.
+ - Criação de usuário (somente Administrador) exige o campo Senha
+   (6 a 100 caracteres).
+
+-------------------------------------------------------------------
+5. COMO EXECUTAR
+-------------------------------------------------------------------
+  dotnet run
+A migration é aplicada automaticamente na inicialização. Para
+testar, use o Swagger (/swagger) ou o arquivo HelpDeskAPI.http:
+faça login, copie o token e informe no botão "Authorize".
+
+-------------------------------------------------------------------
+6. TESTES REALIZADOS
+-------------------------------------------------------------------
+Via curl com a API em execução: acesso sem token (401), login com
+senha errada (401), Administrador e Técnico listando usuários
+(200), Solicitante listando usuários (403), Solicitante vendo
+apenas chamados próprios, acesso a chamado alheio (403), exclusão
+de chamado por Solicitante e Técnico (403), interação interna por
+Solicitante (400), criação de chamado com SolicitanteId forjado
+(gravado com o Id do token) e GET /api/auth/me.

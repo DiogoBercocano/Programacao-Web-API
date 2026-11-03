@@ -215,6 +215,11 @@ namespace HelpDeskAPI.Migrations
                     b.Property<int>("Perfil")
                         .HasColumnType("int");
 
+                    b.Property<string>("SenhaHash")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
                     b.Property<string>("Setor")
                         .IsRequired()
                         .HasMaxLength(80)
@@ -235,6 +240,7 @@ namespace HelpDeskAPI.Migrations
                             Email = "ana.souza@empresa.com",
                             Nome = "Ana Souza",
                             Perfil = 1,
+                            SenhaHash = "",
                             Setor = "Financeiro"
                         },
                         new
@@ -244,6 +250,7 @@ namespace HelpDeskAPI.Migrations
                             Email = "bruno.lima@empresa.com",
                             Nome = "Bruno Lima",
                             Perfil = 1,
+                            SenhaHash = "",
                             Setor = "Comercial"
                         },
                         new
@@ -253,6 +260,7 @@ namespace HelpDeskAPI.Migrations
                             Email = "carla.mendes@empresa.com",
                             Nome = "Carla Mendes",
                             Perfil = 2,
+                            SenhaHash = "",
                             Setor = "TI"
                         },
                         new
@@ -262,6 +270,7 @@ namespace HelpDeskAPI.Migrations
                             Email = "diego.ferreira@empresa.com",
                             Nome = "Diego Ferreira",
                             Perfil = 2,
+                            SenhaHash = "",
                             Setor = "TI"
                         });
                 });

@@ -10,6 +10,4 @@ public class InteracaoCreateDto
 
     public bool Interna { get; set; }
 
-    [Required(ErrorMessage = "O autor é obrigatório.")]
-    public int AutorId { get; set; }
 }

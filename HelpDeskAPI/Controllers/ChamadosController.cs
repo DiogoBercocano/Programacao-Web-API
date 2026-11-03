@@ -2,12 +2,16 @@ using HelpDeskAPI.Data;
 using HelpDeskAPI.Dtos;
 using HelpDeskAPI.Models;
 using HelpDeskAPI.Models.Enums;
+using System.Security.Claims;
+using HelpDeskAPI.Security;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace HelpDeskAPI.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class ChamadosController : ControllerBase
 {
@@ -17,6 +21,12 @@ public class ChamadosController : ControllerBase
     {
         _context = context;
     }
+
+    private int UsuarioLogadoId => int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+
+    private bool EhSolicitante => User.IsInRole(Perfis.Solicitante);
+
+    private bool EhAdministrador => User.IsInRole(Perfis.Administrador);
 
     // GET api/chamados?status=Aberto&prioridade=Alta&categoria=Hardware&solicitanteId=1&tecnicoId=3
     [HttpGet]
@@ -32,6 +42,11 @@ public class ChamadosController : ControllerBase
             .Include(c => c.Solicitante)
             .Include(c => c.Tecnico)
             .AsQueryable();
+
+        if (EhSolicitante)
+        {
+            solicitanteId = UsuarioLogadoId;
+        }
 
         if (status.HasValue)
         {
@@ -77,23 +92,33 @@ public class ChamadosController : ControllerBase
             return NotFound(new { mensagem = $"Chamado com Id {id} nao foi encontrado." });
         }
 
+        if (EhSolicitante && chamado.SolicitanteId != UsuarioLogadoId)
+        {
+            return Forbid();
+        }
+
         return Ok(chamado);
     }
 
     [HttpGet("{id:int}/interacoes")]
     public async Task<ActionResult<IEnumerable<Interacao>>> GetInteracoes(int id)
     {
-        var chamadoExiste = await _context.Chamados.AnyAsync(c => c.Id == id);
+        var chamado = await _context.Chamados.AsNoTracking().FirstOrDefaultAsync(c => c.Id == id);
 
-        if (!chamadoExiste)
+        if (chamado is null)
         {
             return NotFound(new { mensagem = $"Chamado com Id {id} nao foi encontrado." });
+        }
+
+        if (EhSolicitante && chamado.SolicitanteId != UsuarioLogadoId)
+        {
+            return Forbid();
         }
 
         var interacoes = await _context.Interacoes
             .AsNoTracking()
             .Include(i => i.Autor)
-            .Where(i => i.ChamadoId == id)
+            .Where(i => i.ChamadoId == id && (!EhSolicitante || !i.Interna))
             .OrderBy(i => i.DataRegistro)
             .ToListAsync();
 
@@ -103,6 +128,13 @@ public class ChamadosController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<Chamado>> Criar(ChamadoCreateDto dto)
     {
+        if (EhSolicitante)
+        {
+            // Solicitante só abre chamados em seu nome e não escolhe o técnico.
+            dto.SolicitanteId = UsuarioLogadoId;
+            dto.TecnicoId = null;
+        }
+
         var solicitante = await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == dto.SolicitanteId);
         if (solicitante is null)
         {
@@ -142,6 +174,7 @@ public class ChamadosController : ControllerBase
         return CreatedAtAction(nameof(GetPorId), new { id = chamado.Id }, chamado);
     }
 
+    [Authorize(Roles = Perfis.TecnicoOuAdministrador)]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Atualizar(int id, ChamadoUpdateDto dto)
     {
@@ -192,6 +225,7 @@ public class ChamadosController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = Perfis.Administrador)]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Remover(int id)
     {
@@ -217,10 +251,17 @@ public class ChamadosController : ControllerBase
             return NotFound(new { mensagem = $"Chamado com Id {id} nao foi encontrado." });
         }
 
-        var autor = await _context.Usuarios.FirstOrDefaultAsync(u => u.Id == dto.AutorId);
-        if (autor is null)
+        if (EhSolicitante)
         {
-            return BadRequest(new { mensagem = $"Autor com Id {dto.AutorId} nao foi encontrado." });
+            if (chamado.SolicitanteId != UsuarioLogadoId)
+            {
+                return Forbid();
+            }
+
+            if (dto.Interna)
+            {
+                return BadRequest(new { mensagem = "Solicitantes não podem registrar interações internas." });
+            }
         }
 
         var interacao = new Interacao
@@ -229,7 +270,7 @@ public class ChamadosController : ControllerBase
             Interna = dto.Interna,
             DataRegistro = DateTime.Now,
             ChamadoId = id,
-            AutorId = dto.AutorId
+            AutorId = UsuarioLogadoId
         };
 
         _context.Interacoes.Add(interacao);
@@ -238,6 +279,7 @@ public class ChamadosController : ControllerBase
         return CreatedAtAction(nameof(GetInteracoes), new { id }, interacao);
     }
 
+    [Authorize(Roles = Perfis.Administrador)]
     [HttpDelete("{id:int}/interacoes/{interacaoId:int}")]
     public async Task<IActionResult> RemoverInteracao(int id, int interacaoId)
     {

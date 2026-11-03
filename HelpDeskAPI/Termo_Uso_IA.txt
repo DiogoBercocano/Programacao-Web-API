@@ -1,6 +1,6 @@
 ===================================================================
 TERMO DE USO DE INTELIGÊNCIA ARTIFICIAL GENERATIVA
-Projeto: HelpDeskAPI - Checkpoint 02
+Projeto: HelpDeskAPI - Checkpoint 03
 ===================================================================
 
 -------------------------------------------------------------------
@@ -10,7 +10,7 @@ Aluno(a): [seu nome]
 RA: [seu RA]
 Turma: [sua turma]
 Disciplina: Programação Back-End/Web API
-Trabalho: Projeto Integrador - Checkpoint 02
+Trabalho: Projeto Integrador - Checkpoint 03
 
 -------------------------------------------------------------------
 2. FERRAMENTA DE IA UTILIZADA
@@ -22,8 +22,8 @@ com acesso de leitura/escrita ao repositório do projeto.
 -------------------------------------------------------------------
 3. CONTEXTO DE USO
 -------------------------------------------------------------------
-O aluno solicitou que a IA lesse o enunciado do Checkpoint 02
-(arquivo Checkpoint02-WebApi.pdf) e implementasse os requisitos
+O aluno solicitou que a IA lesse os enunciados dos Checkpoints 02 e 03
+(arquivos Checkpoint02-WebApi.pdf e Checkpoint03-WebApi.pdf) e implementasse os requisitos
 diretamente no projeto HelpDeskAPI (estrutura entregue no
 Checkpoint 01, que usava apenas dados em memória). A IA interpretou
 o enunciado, planejou a implementação e executou as alterações de
@@ -99,6 +99,18 @@ aluno ao final.
   - Atualização do arquivo HelpDeskAPI.http com exemplos de todas
     as requisições (GET, POST, PUT, DELETE) para os três recursos.
 
+4.7 Autenticação e autorização (Checkpoint 03)
+  - Leitura do arquivo Checkpoint03-WebApi.pdf e do repositório de
+    exemplo disponibilizado pelo professor (Acervo), usado como
+    referência de estrutura de JWT.
+  - Implementação de SenhaHash em Usuario, perfil Administrador,
+    TokenService, AuthController, DbSeeder, configuração de
+    JwtBearer em Program.cs e migration "Autenticacao".
+  - Aplicação de [Authorize] por perfil nos controllers e regras de
+    acesso por dono do chamado.
+  - Testes manuais via curl e redação da
+    Documentacao_Checkpoint03.txt.
+
 -------------------------------------------------------------------
 5. PARTES DO TRABALHO QUE NÃO USARAM IA
 -------------------------------------------------------------------
@@ -111,5 +123,4 @@ trabalho está descrito de forma completa e verdadeira acima, tendo
 sido utilizada como ferramenta de apoio ao desenvolvimento, e que
 revisei e compreendo o código e as decisões técnicas implementadas.
 
-Assinatura: ____________________________
-Data: ___/___/______
+

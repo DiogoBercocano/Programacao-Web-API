@@ -2,23 +2,30 @@ using HelpDeskAPI.Data;
 using HelpDeskAPI.Dtos;
 using HelpDeskAPI.Models;
 using HelpDeskAPI.Models.Enums;
+using HelpDeskAPI.Security;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace HelpDeskAPI.Controllers;
 
 [ApiController]
+[Authorize]
 [Route("api/[controller]")]
 public class UsuariosController : ControllerBase
 {
     private readonly HelpDeskDbContext _context;
+    private readonly IPasswordHasher<Usuario> _hasher;
 
-    public UsuariosController(HelpDeskDbContext context)
+    public UsuariosController(HelpDeskDbContext context, IPasswordHasher<Usuario> hasher)
     {
         _context = context;
+        _hasher = hasher;
     }
 
     // GET api/usuarios?perfil=Tecnico&ativo=true
+    [Authorize(Roles = Perfis.TecnicoOuAdministrador)]
     [HttpGet]
     public async Task<ActionResult<IEnumerable<Usuario>>> GetTodos([FromQuery] PerfilUsuario? perfil, [FromQuery] bool? ativo)
     {
@@ -39,6 +46,7 @@ public class UsuariosController : ControllerBase
         return Ok(usuarios);
     }
 
+    [Authorize(Roles = Perfis.TecnicoOuAdministrador)]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<Usuario>> GetPorId(int id)
     {
@@ -52,6 +60,7 @@ public class UsuariosController : ControllerBase
         return Ok(usuario);
     }
 
+    [Authorize(Roles = Perfis.Administrador)]
     [HttpPost]
     public async Task<ActionResult<Usuario>> Criar(UsuarioCreateDto dto)
     {
@@ -70,12 +79,15 @@ public class UsuariosController : ControllerBase
             Ativo = dto.Ativo
         };
 
+        usuario.SenhaHash = _hasher.HashPassword(usuario, dto.Senha);
+
         _context.Usuarios.Add(usuario);
         await _context.SaveChangesAsync();
 
         return CreatedAtAction(nameof(GetPorId), new { id = usuario.Id }, usuario);
     }
 
+    [Authorize(Roles = Perfis.Administrador)]
     [HttpPut("{id:int}")]
     public async Task<IActionResult> Atualizar(int id, UsuarioUpdateDto dto)
     {
@@ -103,6 +115,7 @@ public class UsuariosController : ControllerBase
         return NoContent();
     }
 
+    [Authorize(Roles = Perfis.Administrador)]
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Remover(int id)
     {

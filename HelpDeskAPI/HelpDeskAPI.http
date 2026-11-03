@@ -104,3 +104,21 @@ Content-Type: application/json
 
 ### Chamados - excluir interacao
 DELETE {{HelpDeskAPI_HostAddress}}/api/chamados/2/interacoes/2
+
+### Auth - login (administrador)
+# @name login
+POST {{HelpDeskAPI_HostAddress}}/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@empresa.com",
+  "senha": "Admin@123"
+}
+
+### Auth - usuário logado (usa o token do login acima)
+GET {{HelpDeskAPI_HostAddress}}/api/auth/me
+Authorization: Bearer {{login.response.body.token}}
+
+### Chamados - listar com token
+GET {{HelpDeskAPI_HostAddress}}/api/chamados
+Authorization: Bearer {{login.response.body.token}}

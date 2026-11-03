@@ -25,6 +25,9 @@ public class Usuario
     [EnumDataType(typeof(PerfilUsuario), ErrorMessage = "Perfil inválido.")]
     public PerfilUsuario Perfil { get; set; }
 
+    [JsonIgnore]
+    public string SenhaHash { get; set; } = string.Empty;
+
     public bool Ativo { get; set; } = true;
 
     [JsonIgnore]
